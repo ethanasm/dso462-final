@@ -8,7 +8,7 @@ from mysql.connector import Error
 import cgi
 import cgitb
 
-cgitb.enable()
+cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
 print("<p>Made it</p>")
 conn = None
