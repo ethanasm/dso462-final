@@ -10,11 +10,22 @@ import cgitb
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
-print("<p>Made it</p>")
 conn = None
 cursor = None
 
 profile_script_1 = '''
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="canonical" href="https://html5-templates.com/" />
+        <title>Hen Events</title>
+        <meta name="description" content="Hen Events">
+        <link rel="stylesheet" href="/WebContent/styles/style.css" />
+        <script src="/WebContent/scripts/script.js"></script>
+    </head>
+
+    <body>
         <header>
             <div id="logo"><img src="/WebContent/images/flower-logo.png">Hen Events</div>
             <nav>  
@@ -38,7 +49,8 @@ profile_script_2 = '''
 	</section>
 	<footer>
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
-	</footer>'''
+	</footer>
+</body>'''
 
 try:
     conn = mysql.connector.connect(host='localhost',
@@ -82,7 +94,7 @@ try:
                 else:
                     print("<p>Passwords do not match</p>")
             except Error as e:
-                print("<p>Error reading the form</p>")
+                print("<p>Error inserting into database</p>")
         except Error as e:
                 print("<p>Error reading the form</p>")
     else:
