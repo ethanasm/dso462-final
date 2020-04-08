@@ -15,8 +15,6 @@ conn = None
 cursor = None
 
 profile_script_1 = '''
-    <!doctype html>
-    <html lang="en" class="no-js">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -53,9 +51,7 @@ profile_script_2 = '''
 	<footer>
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
-</body>
-
-</html>'''
+</body>'''
 
 try:
     conn = mysql.connector.connect(host='localhost',
