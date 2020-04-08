@@ -84,11 +84,17 @@ try:
                     print("<p>Password cannot be blank</p>")
                     error = True
                 elif input_data["password"].value == input_data["confpassword"].value and error == False:
-                    sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
-                    cursor.execute(sql)
-                    print("<p>Hello {0} {1}!</p>".format(input_data["fname"].value, input_data["lname"].value))
-                    print("<p>Your email is: {0}</p><br>".format(input_data["email"].value))
-                    print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
+                    cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
+                    if cursor.fetchone() is not None:
+                        print("<p>A user with that email already exists</p>")
+                        error = True
+                    else:
+                        sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
+                        cursor.execute(sql)
+                        conn.commit()
+                        print("<p>Hello {0} {1}!</p>".format(input_data["fname"].value, input_data["lname"].value))
+                        print("<p>Your email is: {0}</p><br>".format(input_data["email"].value))
+                        print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")
                     error = True
@@ -112,5 +118,5 @@ finally:
     if conn is not None and conn.is_connected():
         conn.close()
     if error == True:
-        print("<br><p><a href='/WebContent/register.html'><button type='button' class='button'>Return to Form</button></a></p>")
+        print("<br><p><a href='/WebContent/register.html'><button type='button' class='button'>Return to Registration</button></a></p>")
     print(profile_script_2)

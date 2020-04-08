@@ -61,14 +61,6 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
-        cursor.execute('''
-            CREATE TABLE IF NOT EXISTS users (
-                user_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                fname VARCHAR(20)  NOT NULL,
-                lname VARCHAR(20) NOT NULL,
-                email VARCHAR(30) NOT NULL,
-                pw VARCHAR(20) NOT NULL)
-            ''')
         try:
             try:
                 if not input_data["email"]:
@@ -78,14 +70,18 @@ try:
                     print("<p>Password cannot be blank</p>")
                     error = True
                 if error == False:
-                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + "' AND email='" + input_data["email"].value + "'"
+                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + "'"
                     cursor.execute(sql)
                     row = cursor.fetchone()
                     if row is None:
-                        print("<p>User not found</p>")
+                        print("<p>No user registered with that email</p>")
+                        error = True
+                    elif row[4] != input_data["password"].value:
+                        print("<p>Incorrect password</p>")
+                        error = True
                     else:
-                        print("<p>Hello {0} {1}!</p>".format(row["fname"], row["lname"]))
-                        print("<p>Your email is: {0}</p><br>".format(row["email"]))
+                        print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
+                        print("<p>Your email is: {0}</p><br>".format(row[3]))
                         print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
@@ -107,5 +103,5 @@ finally:
     if conn is not None and conn.is_connected():
         conn.close()
     if error == True:
-        print("<br><p><a href='/WebContent/register.html'><button type='button' class='button'>Return to Form</button></a></p>")
+        print("<br><p><a href='/WebContent/login.html'><button type='button' class='button'>Return to Login</button></a></p>")
     print(profile_script_2)
