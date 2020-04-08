@@ -80,8 +80,7 @@ try:
                     print(profile_script_2)
                 else:
                     print("<p>Passwords do not match</p>")
-
-        else:
+        except Error as e:
             print("<p>Error reading the form</p>")
     else:
         print('<p>Unable to connect to MySQL database</p>')
@@ -91,4 +90,3 @@ except Error as e:
 finally:
     if conn is not None and conn.is_connected():
         conn.close()
-
