@@ -1,6 +1,7 @@
-#!/usr/bin/env python3
+            #!/usr/bin/env python3
 
-print('Content-Type:text/html\n')
+print('Content-Type:text/html')
+print("")
 
 import mysql.connector
 from mysql.connector import Error, OperationalError
