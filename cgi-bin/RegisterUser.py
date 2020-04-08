@@ -51,7 +51,7 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
-
+print(profile_scprit_1)
 try:
     conn = mysql.connector.connect(host='localhost',
                                    user='root',
@@ -60,14 +60,14 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
+        cursor.execute("DROP TABLE IF EXISTS users")
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
-                user_id INT(6) NOT NULL AUTO_INCREMENT,
+                user_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 fname VARCHAR(20)  NOT NULL,
                 lname VARCHAR(20) NOT NULL,
                 email VARCHAR(30) NOT NULL,
-                password VARCHAR(20) NOT NULL,
-                CONSTRAINT user_pk PRIMARY KEY (user_id))
+                pw VARCHAR(20) NOT NULL)
             ''')
         try:
             fname = input_data["fname"].value
@@ -85,23 +85,23 @@ try:
                 if password is None:
                     print("<p>Password cannot be blank</p>")
                 elif password == confpassword:
-                    cursor.execute("INSERT INTO users (fname, lname, email, password) VALUES ({0}, {1}, {2}, {3})".format(fname, lname, email, password))
-                    print(profile_script_1)
+                    sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" 
+                    cursor.execute(sql)
+                    print("<p>After</p>")
                     print("<p>Hello {0} {1}!</p>".format(fname, lname))
                     print("<p>Your email is: {0}</p><br>".format(email))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
-                    print(profile_script_2)
                 else:
                     print("<p>Passwords do not match</p>")
             except Error as e:
-                print("<p>Error inserting into database</p>")
+                print("<p>", e, "</p>")
         except Error as e:
                 print("<p>Error reading the form</p>")
     else:
         print('<p>Unable to connect to MySQL database</p>')
 except Error as e:
     print('<p>',e,'</p>')
-
+print(profile_script_2)
 finally:
     if conn is not None and conn.is_connected():
         conn.close()
