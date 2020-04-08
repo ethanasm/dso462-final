@@ -80,8 +80,10 @@ try:
                     print(profile_script_2)
                 else:
                     print("<p>Passwords do not match</p>")
+            except Error as e:
+                print("<p>Error reading the form</p>")
         except Error as e:
-            print("<p>Error reading the form</p>")
+                print("<p>Error reading the form</p>")
     else:
         print('<p>Unable to connect to MySQL database</p>')
 except Error as e:
