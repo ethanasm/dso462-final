@@ -101,7 +101,7 @@ try:
         print('<p>Unable to connect to MySQL database</p>')
 except Error as e:
     print('<p>',e,'</p>')
-print(profile_script_2)
 finally:
     if conn is not None and conn.is_connected():
         conn.close()
+print(profile_script_2)
