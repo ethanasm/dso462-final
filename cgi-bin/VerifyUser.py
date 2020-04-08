@@ -78,8 +78,7 @@ try:
                     print("<p>Password cannot be blank</p>")
                     error = True
                 if error == False:
-                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + " AND email='" + input_data["email"].value + "')" 
-                    cursor.execute("DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1")
+                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + "' AND email='" + input_data["email"].value + "'"
                     cursor.execute(sql)
                     row = cursor.fetchone()
                     if row is None:

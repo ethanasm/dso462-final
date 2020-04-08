@@ -86,8 +86,8 @@ try:
                 elif input_data["password"].value == input_data["confpassword"].value and error == False:
                     sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
                     cursor.execute(sql)
-                    print("<p>Hello {0} {1}!</p>".format(fname, lname))
-                    print("<p>Your email is: {0}</p><br>".format(email))
+                    print("<p>Hello {0} {1}!</p>".format(input_data["fname"].value, input_data["lname"].value))
+                    print("<p>Your email is: {0}</p><br>".format(input_data["email"].value))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")
