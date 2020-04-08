@@ -51,7 +51,8 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
-print(profile_scprit_1)
+print(profile_script_1)
+error = False
 try:
     conn = mysql.connector.connect(host='localhost',
                                    user='root',
@@ -70,38 +71,45 @@ try:
                 pw VARCHAR(20) NOT NULL)
             ''')
         try:
-            fname = input_data["fname"].value
-            lname = input_data["lname"].value
-            email = input_data["email"].value
-            password = input_data["password"].value
-            confpassword = input_data["confpassword"].value
             try:
-                if fname is None:
+                if not input_data["fname"]:
                     print("<p>First name cannot be blank</p>")
-                if lname is None:
+                    error = True
+                if not input_data["lname"]:
                     print("<p>Last name cannot be blank</p>")
-                if email is None:
+                    error = True
+                if not input_data["email"]:
                     print("<p>Email cannot be blank</p>")
-                if password is None:
+                    error = True
+                if not input_data["password"] or not input_data["confpassword"]:
                     print("<p>Password cannot be blank</p>")
-                elif password == confpassword:
-                    sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" 
+                    error = True
+                elif input_data["password"].value == input_data["confpassword"].value and error == False:
+                    sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
                     cursor.execute(sql)
-                    print("<p>After</p>")
                     print("<p>Hello {0} {1}!</p>".format(fname, lname))
                     print("<p>Your email is: {0}</p><br>".format(email))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")
+                    error = True
+            except KeyError as ke:
+                print("<p>Form values cannot be blank!</p>")
+                error = True
             except Error as e:
                 print("<p>", e, "</p>")
         except Error as e:
                 print("<p>Error reading the form</p>")
+                error = True
     else:
         print('<p>Unable to connect to MySQL database</p>')
+        error = True
 except Error as e:
     print('<p>',e,'</p>')
+    error = True
 finally:
     if conn is not None and conn.is_connected():
         conn.close()
-print(profile_script_2)
+    if error == True:
+        print("<br><p><a href='/WebContent/register.html'><button type='button' class='button'>Return to Form</button></a></p>")
+    print(profile_script_2)
