@@ -4,13 +4,13 @@ print('Content-Type:text/html')
 print("")
 
 import mysql.connector
-from mysql.connector import Error, OperationalError
+from mysql.connector import Error
 import cgi
 import cgitb
 
 cgitb.enable()
 input_data=cgi.FieldStorage()
-
+print("<p>Made it</p>")
 conn = None
 cursor = None
 
