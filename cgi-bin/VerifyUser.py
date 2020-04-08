@@ -71,27 +71,23 @@ try:
             ''')
         try:
             try:
-                if not input_data["fname"]:
-                    print("<p>First name cannot be blank</p>")
-                    error = True
-                if not input_data["lname"]:
-                    print("<p>Last name cannot be blank</p>")
-                    error = True
                 if not input_data["email"]:
                     print("<p>Email cannot be blank</p>")
                     error = True
-                if not input_data["password"] or not input_data["confpassword"]:
+                if not input_data["password"]:
                     print("<p>Password cannot be blank</p>")
                     error = True
-                elif input_data["password"].value == input_data["confpassword"].value and error == False:
-                    sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
+                if error == False:
+                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + " AND email='" + input_data["email"].value + "')" 
+                    cursor.execute("DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1")
                     cursor.execute(sql)
-                    print("<p>Hello {0} {1}!</p>".format(fname, lname))
-                    print("<p>Your email is: {0}</p><br>".format(email))
-                    print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
-                else:
-                    print("<p>Passwords do not match</p>")
-                    error = True
+                    row = cursor.fetchone()
+                    if row is None:
+                        print("<p>User not found</p>")
+                    else:
+                        print("<p>Hello {0} {1}!</p>".format(row["fname"], row["lname"]))
+                        print("<p>Your email is: {0}</p><br>".format(row["email"]))
+                        print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
