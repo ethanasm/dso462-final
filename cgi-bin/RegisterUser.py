@@ -71,29 +71,21 @@ try:
             ''')
         try:
             try:
-                if not input_data["fname"]:
-                    print("<p>First name cannot be blank</p>")
-                    error = True
-                if not input_data["lname"]:
-                    print("<p>Last name cannot be blank</p>")
-                    error = True
-                if not input_data["email"]:
-                    print("<p>Email cannot be blank</p>")
-                    error = True
-                if not input_data["password"] or not input_data["confpassword"]:
-                    print("<p>Password cannot be blank</p>")
-                    error = True
-                elif input_data["password"].value == input_data["confpassword"].value and error == False:
+                fname = input_data["fname"].value
+                lname = input_data["lname"].value
+                email = input_data["email"].value
+                password = input_data["password"].value
+                confpassword = input_data["confpassword"].value
+                if password == confpassword:
                     cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
                     if cursor.fetchone() is not None:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        sql = "INSERT INTO users (fname, lname, email, pw) VALUES ('" + input_data["fname"].value + "', '" + input_data["lname"].value + "', '" + input_data["email"].value + "', '" + input_data["password"].value + "')" 
-                        cursor.execute(sql)
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" )
                         conn.commit()
-                        print("<p>Hello {0} {1}!</p>".format(input_data["fname"].value, input_data["lname"].value))
-                        print("<p>Your email is: {0}</p><br>".format(input_data["email"].value))
+                        print("<p>Hello {0} {1}!</p>".format(fname, lname))
+                        print("<p>Your email is: {0}</p><br>".format(email))
                         print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")

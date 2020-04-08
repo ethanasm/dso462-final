@@ -61,28 +61,30 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS users (
+                user_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                fname VARCHAR(20)  NOT NULL,
+                lname VARCHAR(20) NOT NULL,
+                email VARCHAR(30) NOT NULL,
+                pw VARCHAR(20) NOT NULL)
+            ''')
         try:
             try:
-                if not input_data["email"]:
-                    print("<p>Email cannot be blank</p>")
+                email = input_data["email"].value
+                password = input_data["password"].value
+                cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
+                row = cursor.fetchone()
+                if row is None:
+                    print("<p>No user registered with that email</p>")
                     error = True
-                if not input_data["password"]:
-                    print("<p>Password cannot be blank</p>")
+                elif row[4] != password:
+                    print("<p>Incorrect password</p>")
                     error = True
-                if error == False:
-                    sql = "SELECT * FROM users WHERE email='" + input_data["email"].value + "'"
-                    cursor.execute(sql)
-                    row = cursor.fetchone()
-                    if row is None:
-                        print("<p>No user registered with that email</p>")
-                        error = True
-                    elif row[4] != input_data["password"].value:
-                        print("<p>Incorrect password</p>")
-                        error = True
-                    else:
-                        print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
-                        print("<p>Your email is: {0}</p><br>".format(row[3]))
-                        print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
+                else:
+                    print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
+                    print("<p>Your email is: {0}</p><br>".format(row[3]))
+                    print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
