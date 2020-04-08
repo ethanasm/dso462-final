@@ -48,7 +48,7 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute('''
-            CREATE TABLE IF NOT EXISTS 'users' (
+            CREATE TABLE IF NOT EXISTS users (
                 user_id INT(6) NOT NULL AUTO_INCREMENT,
                 fname VARCHAR(20)  NOT NULL,
                 lname VARCHAR(20) NOT NULL,
