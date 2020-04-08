@@ -47,6 +47,7 @@ try:
     if conn.is_connected():
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
+        cursor.execute("USE hen")
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS users (
                 user_id INT(6) NOT NULL AUTO_INCREMENT,
