@@ -15,7 +15,8 @@ hr{display:block;height:1px;border:0;border-top:1px solid #ccc;margin:1em 0;padd
 input,select{vertical-align:middle}
 
 body,html {
-	background-color: #FFF;
+    background-color: #FFF;
+    font-family: 'Courier New', Courier, monospace;
 }
 header {
     background: #AEC6CF;
@@ -68,7 +69,8 @@ article h2 {
     margin-bottom: 12px;
 }
 article p {
-	
+    text-indent: 40px;
+	margin-bottom: 5px;
 }
 main section {
 	
@@ -88,7 +90,7 @@ address {
 }
 aside > div {
 	margin: 10px auto;
-	background: #AEC6CF;
+	background: white;
 	min-height: 100px;
 }
 #logo {
@@ -109,6 +111,29 @@ body > section {
     padding: 30px 0px;
     border-bottom: 1px solid #999;
     color: #333;
+}
+
+.button {
+    display: inline-block;
+    padding: 8px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    outline: none;
+    color: #fff;
+    background-color: #AEC6CF;
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 6px #999;
+  }
+  
+.button:hover {background-color: #AEC6CF}
+  
+.button:active {
+    background-color: #AEC6CF;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
 }
 
 @media screen and (max-width: 1000px) {
