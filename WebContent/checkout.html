@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <meta name="description" content="Hen Events checkout">
+    <link rel="stylesheet" href="/WebContent/styles/style.css" />
+	<script src="/WebContent/scripts/script.js"></script>
+	<link rel="shortcut icon" href="/WebContent/images/flower-logo.png" type="image/png"/>
+    <link rel="icon" href="/WebContent/images/flower-logo.png" type="image/png"/>
+</head>
+
+<body>
+	<header>
+		<div id="logo"><img src="/WebContent/images/flower-logo.png">Hen Events</div>
+		<nav>  
+			<ul>
+				<li><a href="/">Home</a>
+				<li><a href="/WebContent/services.html">Services</a>
+				<li><a href="/WebContent/booking.html">Booking</a>
+				<li><a href="/WebContent/about.html">About</a>
+				<li><a href="/WebContent/profile.html">Profile</a>
+			</ul>
+		</nav>
+	</header>
+	<section>
+		<strong>Checkout</strong>
+	</section>
+	<section id="pageContent">
+		<div class="card rounded">
+			<form action="../cgi-bin/AddOrder.py" method="POST">
+				<label for="fname">First Name</label>
+				<input type="text" id="fname" name="fname"><br>
+				<label for="lname">Last Name</label>
+				<input type="text" id="lname" name="lname"><br>
+				<label for="email">Email</label>
+				<input type="email" id="email"  name="email"><br>
+				<label for="password">Password</label> 
+				<input type="password" id="password" name="password"><br>
+				<label for="confpassword">Confirm Password</label> 
+				<input type="password" id="confpassword" name="confpassword"><br>
+				<input type="submit">
+			</form>
+		</div>
+	</section>
+	<footer>
+		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
+	</footer>
+</body>
+
+</html>
