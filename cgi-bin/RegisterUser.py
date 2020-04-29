@@ -94,6 +94,17 @@ try:
                 CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )
         ''')
+        ursor.execute('''
+                CREATE TABLE IF NOT EXISTS products (
+                    product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(30)  NOT NULL,
+                    price INT(3) NOT NULL)
+                ''')
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Full Package", 150))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Partial Package", 100))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Simple Package", 80))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("The Basics", 70))
+        conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
                 order_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
