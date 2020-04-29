@@ -133,7 +133,7 @@ try:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, encrypt_string(password)))
                         conn.commit()
                         cursor.execute("SELECT * FROM users WHERE email='{0}'".format(email))
                         user = cursor.fetchone()
