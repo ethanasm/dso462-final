@@ -52,12 +52,14 @@ profile_script_2 = '''
 	</footer>
 </body>'''
 
-def setLoggedIn(user_id, cursor):
+def setLoggedIn(user_id, conn):
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM loggedin_user")
-    if cursor.fetchone() is not None:
+    if cursor.fetchone() is None:
         cursor.execute("INSERT INTO loggedin_user(zero,id) VALUES (0,{0})".format(user_id))
     else:
         cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+    cursor.close()
 
 
 print(profile_script_1)
@@ -105,7 +107,7 @@ try:
                         cursor.execute("SELECT user_id FROM users WHERE email='{0}'".format(email))
                         cursor.commit()
                         user_id = cursor.fetchone()[0]
-                        setLoggedIn(user_id, cursor)
+                        setLoggedIn(user_id, conn)
                         
                         print("<p>Hello {0} {1}!</p>".format(fname, lname))
                         print("<p>Your email is: {0}</p><br>".format(email))
