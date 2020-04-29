@@ -15,7 +15,7 @@ cursor = None
 
 def checkTableExists(conn, tablename):
     cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM hen.tables WHERE table_name = '{0}'".format(tablename))
+    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{0}'".format(tablename))
     if cursor.fetchone()[0] == 1:
         cursor.close()
         return True
