@@ -13,6 +13,13 @@ input_data=cgi.FieldStorage()
 conn = None
 cursor = None
 
+def setLoggedIn(user_id, cursor):
+    cursor.execute("SELECT * FROM loggedin_user")
+    if cursor.fetchone() is not None:
+        cursor.execute("INSERT INTO loggedin_user(zero,id) VALUES (0,{0})".format(user_id))
+    else:
+        cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+
 profile_script_1 = '''
     <head>
         <meta charset="utf-8">
@@ -69,6 +76,13 @@ try:
                 email VARCHAR(30) NOT NULL,
                 pw VARCHAR(20) NOT NULL)
             ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS loggedin_user (
+                zero INT(1) PRIMARY KEY,
+                id INT(6),
+                CONSTRAINT 'id' FOREIGN KEY (id) REFERENCES user(user_id)
+            )
+        ''')
         try:
             try:
                 email = input_data["email"].value
@@ -82,6 +96,7 @@ try:
                     print("<p>Incorrect password</p>")
                     error = True
                 else:
+                    setLoggedIn(row[0], cursor)
                     print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
                     print("<p>Your email is: {0}</p><br>".format(row[3]))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")

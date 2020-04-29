@@ -51,6 +51,15 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
+
+def setLoggedIn(user_id, cursor):
+    cursor.execute("SELECT * FROM loggedin_user")
+    if cursor.fetchone() is not None:
+        cursor.execute("INSERT INTO loggedin_user(zero,id) VALUES (0,{0})".format(user_id))
+    else:
+        cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+
+
 print(profile_script_1)
 error = False
 try:
@@ -68,7 +77,16 @@ try:
                 lname VARCHAR(20) NOT NULL,
                 email VARCHAR(30) NOT NULL,
                 pw VARCHAR(20) NOT NULL)
-            ''')
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS loggedin_user (
+                zero INT(1) PRIMARY KEY,
+                id INT(6),
+                CONSTRAINT 'id' FOREIGN KEY (id) REFERENCES user(user_id)
+            )
+        ''')
+
+        
         try:
             try:
                 fname = input_data["fname"].value
@@ -77,13 +95,18 @@ try:
                 password = input_data["password"].value
                 confpassword = input_data["confpassword"].value
                 if password == confpassword:
-                    cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
+                    cursor.execute("SELECT * FROM users WHERE email='{0}'".format(input_data["email"].value))
                     if cursor.fetchone() is not None:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" )
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
                         conn.commit()
+                        cursor.execute("SELECT user_id FROM users WHERE email='{0}'".format(email))
+                        cursor.commit()
+                        user_id = cursor.fetchone()[0]
+                        setLoggedIn(user_id, cursor)
+                        
                         print("<p>Hello {0} {1}!</p>".format(fname, lname))
                         print("<p>Your email is: {0}</p><br>".format(email))
                         print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
