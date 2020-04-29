@@ -88,6 +88,18 @@ try:
                 CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )
         ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
+                user_id INT(6) NOT NULL,
+                product_id INT(6) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                date VARCHAR(10) NOT NULL,
+                time VARCHAR(10) NOT NULL,
+                pay_status INT(1) NOT NULL,
+                CONSTRAINT 'user_id' FOREIGN KEY (user_id) REFERENCES user(user_id),
+                CONSTRAINT 'product_id' FOREIGN KEY (product_id) REFERENFES product(product_id))
+                ''')
 
         
         try:
@@ -99,19 +111,17 @@ try:
                 confpassword = input_data["confpassword"].value
                 if password == confpassword:
                     cursor.execute("SELECT * FROM users WHERE email='{0}'".format(input_data["email"].value))
-                    if cursor.fetchone() is not None:
+                    user = cursor.fetchone()
+                    if user is not None:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
                         cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
                         conn.commit()
-                        cursor.execute("SELECT user_id FROM users WHERE email='{0}'".format(email))
-                        cursor.commit()
-                        user_id = cursor.fetchone()[0]
-                        setLoggedIn(user_id, conn)
-                        
-                        print("<p>Hello {0} {1}!</p>".format(fname, lname))
-                        print("<p>Your email is: {0}</p><br>".format(email))
+                        setLoggedIn(user[0], conn)
+                        print("<p>Hello {0} {1}!</p>".format(user[1], user[2]))
+                        print("<p>Your email is: {0}</p><br><br>".format(user[3]))
+                        print("<p>My events: <b>No events scheduled yet</b></p><br>")
                         print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")

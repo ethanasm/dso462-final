@@ -108,6 +108,8 @@ checkout_script_2 = '''
                     <label for="desc">Event Details</label><br>
                     <textarea rows="4" cols="60" name="desc"></textarea><br><br>
                     <input type="submit" value="Continue to Purchase Method">
+                    <input type="hidden" name="user_id" value="{4}">
+                    <input type="hidden" name="prod_id" value="{5}">
                 </form>
             </div>
         </section>
@@ -151,7 +153,7 @@ try:
                     print(checkout_script_1)
                     cursor.execute("SELECT * FROM users WHERE user_id={0}".format(user_id))
                     row = cursor.fetchone()
-                    print(checkout_script_2.format(input_data["product"].value, input_data["price"].value, row[1], row[2]))
+                    print(checkout_script_2.format(input_data["product"].value, input_data["price"].value, row[1], row[2], user_id, input_data["prod_id"].value))
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
