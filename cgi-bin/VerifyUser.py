@@ -97,15 +97,14 @@ try:
                 id INT(6),
                 CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )''')
-        if not checkTableExists(conn, 'products'):
-            cursor.execute('''
+        cursor.execute('''
                 CREATE TABLE IF NOT EXISTS products (
                     product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(30)  NOT NULL,
                     price INT(3) NOT NULL)
                 ''')
-            for product in products:
-                cursor.execute(product_insert_stmt, product)
+        for product in products:
+            cursor.execute(product_insert_stmt, product)  
         conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
