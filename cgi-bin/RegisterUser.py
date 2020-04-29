@@ -82,7 +82,7 @@ try:
             CREATE TABLE IF NOT EXISTS loggedin_user (
                 zero INT(1) PRIMARY KEY,
                 id INT(6),
-                CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES user(user_id)
+                CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )
         ''')
 
