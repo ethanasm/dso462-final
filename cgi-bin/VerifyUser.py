@@ -23,6 +23,8 @@ def setLoggedIn(user_id, conn):
     conn.commit()
     cursor.close()
 
+product_insert_stmt = ("INSERT INTO product(name, price)""VALUES(%s, %d)")
+products = [('Full Package', 150), ('Simple Package', 100), ('Partial Package', 80), ('The Basics', 70)]
 profile_script_1 = '''
     <head>
         <meta charset="utf-8">
@@ -61,6 +63,16 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
+
+def checkTableExists(conn, tablename):
+    cursor = conn.cursor()
+    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{0}'".format(tablename))
+    if cursor.fetchone()[0] == 1:
+        cursor.close()
+        return True
+    cursor.close()
+    return False
+
 print(profile_script_1)
 error = False
 try:
@@ -85,6 +97,16 @@ try:
                 id INT(6),
                 CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )''')
+        if not checkTableExists(conn, 'products'):
+            cursor.execute('''
+                CREATE TABLE IF NOT EXISTS products (
+                    product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    name VARCHAR(30)  NOT NULL,
+                    price INT(3) NOT NULL)
+                ''')
+            for product in products:
+                cursor.execute(product_insert_stmt, product)
+        conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
                 order_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -97,6 +119,7 @@ try:
                 CONSTRAINT fk_userid FOREIGN KEY (user_id) REFERENCES users(user_id),
                 CONSTRAINT fk_productid FOREIGN KEY (product_id) REFERENCES products(product_id))
                 ''')
+        conn.commit()
         try:
             try:
                 email = input_data["email"].value
