@@ -95,7 +95,7 @@ try:
                 time VARCHAR(10) NOT NULL,
                 pay_status INT(1) NOT NULL,
                 CONSTRAINT fk_userid FOREIGN KEY (user_id) REFERENCES users(user_id),
-                CONSTRAINT fk_productid FOREIGN KEY (product_id) REFERENFES products(product_id))
+                CONSTRAINT fk_productid FOREIGN KEY (product_id) REFERENCES products(product_id))
                 ''')
         try:
             try:
