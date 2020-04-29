@@ -62,6 +62,7 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
+
 print(profile_script_1)
 error = False
 try:
@@ -82,39 +83,41 @@ try:
             for product in products:
                 cursor.execute(product_insert_stmt, product)
             conn.commit()
-        if not checkTableExists(conn, 'orders'):
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS orders (
-                    order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
-                    user_id INT(6) NOT NULL,
-                    product_id INT(6) NOT NULL,
-                    date VARCHAR(10) NOT NULL,
-                    time VARCHAR(10) NOT NULL,
-                    pay_status INT(1) NOT NULL,
-                    CONSTRAINT 'user_id' FOREIGN KEY (user_id) REFERENCES user(user_id),
-                    CONSTRAINT 'product_id' FOREIGN KEY (product_id) REFERENFES product(product_id))
-                    ''')
+        cursor.execute("DROP TABLE orders")
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
+                user_id INT(6) NOT NULL,
+                product_id INT(6) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                date VARCHAR(10) NOT NULL,
+                time VARCHAR(10) NOT NULL,
+                pay_status INT(1) NOT NULL,
+                CONSTRAINT 'user_id' FOREIGN KEY (user_id) REFERENCES user(user_id),
+                CONSTRAINT 'product_id' FOREIGN KEY (product_id) REFERENFES product(product_id))
+                ''')
         try:
             try:
-                fname = input_data["fname"].value
-                lname = input_data["lname"].value
-                email = input_data["email"].value
-                password = input_data["password"].value
-                confpassword = input_data["confpassword"].value
-                if password == confpassword:
-                    cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
-                    if cursor.fetchone() is not None:
-                        print("<p>A user with that email already exists</p>")
-                        error = True
-                    else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" )
-                        conn.commit()
-                        print("<p>Hello {0} {1}!</p>".format(fname, lname))
-                        print("<p>Your email is: {0}</p><br>".format(email))
-                        print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
+                user_id = input_data["user_id"].value
+                prod_id = input_data["prod_id"].value
+                ename = input_data["ename"].value
+                date = input_data["date"].value
+                time = input_data["time"].value
+                cursor.execute("INSERT INTO orders (user_id, product_id, name, date, time, pay_status) VALUES ({0},{1},'{2}','{3}','{4}',0)".format(user_id, prod_id, ename, date, time,))
+                conn.commit()
+                cursor.execute("SELECT * FROM users WHERE user_id={0}".format(user_id))
+                row = cursor.fetchone()
+                print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
+                print("<p>Your email is: {0}</p><br><br>".format(row[3]))
+                print("<p>My events: </p><br>")
+                cursor.execute("SELECT * FROM orders WHERE user_id={0}".format(user_id))
+                records = cursor.fetchall()
+                if records is None:
+                    print("<p>No events scheduled yet.</p>")
                 else:
-                    print("<p>Passwords do not match</p>")
-                    error = True
+                    for row in records:
+                        print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0] + 1, row[2], row[4], row[3]))
+                print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True

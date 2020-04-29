@@ -32,31 +32,47 @@
 		<main role="main">
 			<article>
 				<h2>Full Package</h2>
-				<p>		Bundle + Complete Installation</p>
+				<p>Bundle + Complete Installation</p>
 				<p>3 hours - $150</p>
-				<form action="../cgi-bin/AddOrder.py" method="POST">
-					<input type="hidden" id="product_id" name="0"><br>
+				<form action="../cgi-bin/BookingToCheckout.py" method="POST">
+					<input type="hidden" name="product" value="Bundle + Complete Installation">
+					<input type="hidden" name="price" value="150">
+					<input type="hidden" name="prod_id" value="0">
 					<input type="submit" class="button" value="Book Now">
 				</form>
-				<button type="button" class="button">Book Now</button>
 			</article>
 			<article>
 				<h2>Simple Package</h2>
 				<p>Bundle + Simple Installation</p>
 				<p>2 hours - $100</p>
-				<button type="button" class="button">Book Now</button>	
+				<form action="../cgi-bin/BookingToCheckout.py" method="POST">
+					<input type="hidden" name="product" value="Bundle + Simple Installation">
+					<input type="hidden" name="price" value="100">
+					<input type="hidden" name="prod_id" value="1">
+					<input type="submit" class="button" value="Book Now">
+				</form>
 			</article>
 			<article>
 				<h2>Partial Package</h2>
 				<p>Bundle + Partial Installation</p>
 				<p>2 hours - $80</p>
-				<button type="button" class="button">Book Now</button>	
+				<form action="../cgi-bin/BookingToCheckout.py" method="POST">
+					<input type="hidden" name="product" value="Bundle + Partial Installation">
+					<input type="hidden" name="price" value="80">
+					<input type="hidden" name="prod_id" value="2">
+					<input type="submit" class="button" value="Book Now">
+				</form>	
 			</article>
 			<article>
 				<h2>The Basics</h2>
 				<p>Bundle</p>
 				<p>1 hour - $70</p>
-				<button type="button" class="button">Book Now</button>	
+				<form action="../cgi-bin/BookingToCheckout.py" method="POST">
+					<input type="hidden" name="product" value="The Basics">
+					<input type="hidden" name="price" value="70">
+					<input type="hidden" name="prod_id" value="3">
+					<input type="submit" class="button" value="Book Now">
+				</form>
 			</article>
 			<div>
 				<a href="https://www.splacer.co/spaces/affordable-event-spaces-los-angeles">

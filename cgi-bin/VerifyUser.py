@@ -13,6 +13,16 @@ input_data=cgi.FieldStorage()
 conn = None
 cursor = None
 
+def setLoggedIn(user_id, conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM loggedin_user")
+    if cursor.fetchone() is None:
+        cursor.execute("INSERT INTO loggedin_user (zero,id) VALUES (0,{0})".format(user_id))
+    else:
+        cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+    conn.commit()
+    cursor.close()
+
 profile_script_1 = '''
     <head>
         <meta charset="utf-8">
@@ -69,6 +79,24 @@ try:
                 email VARCHAR(30) NOT NULL,
                 pw VARCHAR(20) NOT NULL)
             ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS loggedin_user (
+                zero INT(1) PRIMARY KEY,
+                id INT(6),
+                CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
+            )''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
+                user_id INT(6) NOT NULL,
+                product_id INT(6) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                date VARCHAR(10) NOT NULL,
+                time VARCHAR(10) NOT NULL,
+                pay_status INT(1) NOT NULL,
+                CONSTRAINT 'user_id' FOREIGN KEY (user_id) REFERENCES user(user_id),
+                CONSTRAINT 'product_id' FOREIGN KEY (product_id) REFERENFES product(product_id))
+                ''')
         try:
             try:
                 email = input_data["email"].value
@@ -82,8 +110,18 @@ try:
                     print("<p>Incorrect password</p>")
                     error = True
                 else:
+                    setLoggedIn(row[0], conn)
                     print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
                     print("<p>Your email is: {0}</p><br>".format(row[3]))
+                    print("<p>My events: ")
+                    cursor.execute("SELECT * FROM orders WHERE user_id={0}".format(user_id))
+                    records = cursor.fetchall()
+                    if records is None:
+                        print("<b>No events scheduled yet.</b></p><br>")
+                    else:
+                        print("</p><br>")
+                        for row in records:
+                            print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0] + 1, row[2], row[4], row[3]))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")

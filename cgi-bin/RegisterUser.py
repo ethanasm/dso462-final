@@ -51,6 +51,18 @@ profile_script_2 = '''
 		<p>&copy; 2020 by Hen Events | 3607 Trousdale Pkwy Los Angeles, CA 90089 | info@henevents.com</p>
 	</footer>
 </body>'''
+
+def setLoggedIn(user_id, conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM loggedin_user")
+    if cursor.fetchone() is None:
+        cursor.execute("INSERT INTO loggedin_user(zero,id) VALUES (0,{0})".format(user_id))
+    else:
+        cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+    conn.commit()
+    cursor.close()
+
+
 print(profile_script_1)
 error = False
 try:
@@ -68,7 +80,28 @@ try:
                 lname VARCHAR(20) NOT NULL,
                 email VARCHAR(30) NOT NULL,
                 pw VARCHAR(20) NOT NULL)
-            ''')
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS loggedin_user (
+                zero INT(1) PRIMARY KEY,
+                id INT(6),
+                CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
+            )
+        ''')
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS orders (
+                order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
+                user_id INT(6) NOT NULL,
+                product_id INT(6) NOT NULL,
+                name VARCHAR(50) NOT NULL,
+                date VARCHAR(10) NOT NULL,
+                time VARCHAR(10) NOT NULL,
+                pay_status INT(1) NOT NULL,
+                CONSTRAINT 'user_id' FOREIGN KEY (user_id) REFERENCES user(user_id),
+                CONSTRAINT 'product_id' FOREIGN KEY (product_id) REFERENFES product(product_id))
+                ''')
+
+        
         try:
             try:
                 fname = input_data["fname"].value
@@ -77,15 +110,18 @@ try:
                 password = input_data["password"].value
                 confpassword = input_data["confpassword"].value
                 if password == confpassword:
-                    cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
-                    if cursor.fetchone() is not None:
+                    cursor.execute("SELECT * FROM users WHERE email='{0}'".format(input_data["email"].value))
+                    user = cursor.fetchone()
+                    if user is not None:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('" + fname + "', '" + lname + "', '" + email + "', '" + password + "')" )
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
                         conn.commit()
-                        print("<p>Hello {0} {1}!</p>".format(fname, lname))
-                        print("<p>Your email is: {0}</p><br>".format(email))
+                        setLoggedIn(user[0], conn)
+                        print("<p>Hello {0} {1}!</p>".format(user[1], user[2]))
+                        print("<p>Your email is: {0}</p><br><br>".format(user[3]))
+                        print("<p>My events: <b>No events scheduled yet</b></p><br>")
                         print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
                 else:
                     print("<p>Passwords do not match</p>")
