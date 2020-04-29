@@ -78,7 +78,6 @@ try:
                                    user='root',
                                    password='password')
     if conn.is_connected():
-        
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
