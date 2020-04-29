@@ -7,6 +7,7 @@ import mysql.connector
 from mysql.connector import Error
 import cgi
 import cgitb
+import traceback
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
@@ -92,7 +93,7 @@ try:
                 ename = input_data["ename"].value
                 date = input_data["date"].value
                 time = input_data["time"].value
-                cursor.execute("INSERT INTO orders (user_id, product_id, name, date, time, pay_status) VALUES ({0},{1},'{2}','{3}','{4}',0)".format(user_id, prod_id, ename, date, time,))
+                cursor.execute("INSERT INTO orders (user_id, product_id, name, date, time, pay_status) VALUES ({0},{1},'{2}','{3}','{4}',0)".format(user_id, int(prod_id) + 1, ename, date, time,))
                 conn.commit()
                 cursor.execute("SELECT * FROM users WHERE user_id={0}".format(user_id))
                 row = cursor.fetchone()
@@ -105,13 +106,13 @@ try:
                     print("<p>No events scheduled yet.</p>")
                 else:
                     for row in records:
-                        print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0] + 1, row[2], row[4], row[3]))
+                        print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0], row[3], row[5], row[4]))
                 print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
             except Error as e:
-                print("<p>", e, "</p>")
+                print("<p>", traceback.format_exc(), "</p>")
             finally:
                 cursor.close()
         except Error as e:
@@ -121,7 +122,7 @@ try:
         print('<p>Unable to connect to MySQL database</p>')
         error = True
 except Error as e:
-    print('<p>',e,'</p>')
+    print('<p>',traceback.format_exc(),'</p>')
     error = True
 finally:
     if conn is not None and conn.is_connected():

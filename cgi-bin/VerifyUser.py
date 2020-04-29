@@ -150,7 +150,7 @@ try:
                     else:
                         print("</p><br>")
                         for row in records:
-                            print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0] + 1, row[2], row[4], row[3]))
+                            print("<p>Event {0} -- {1} -- {2} on {3} -- Bundle not yet shipped</p><br>".format(row[0], row[3], row[5], row[4]))
                     print("<p><a href='/'><button type='button' class='button'>Logout</button></a></p>")
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
