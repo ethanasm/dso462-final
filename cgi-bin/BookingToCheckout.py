@@ -129,6 +129,13 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS loggedin_user (
+                zero INT(1) PRIMARY KEY,
+                id INT(6),
+                CONSTRAINT 'id' FOREIGN KEY (id) REFERENCES user(user_id)
+            )
+        ''')
         try:
             try:
                 user_id = isLoggedIn(cursor)
