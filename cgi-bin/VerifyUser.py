@@ -137,9 +137,9 @@ try:
                     print("<p>Hello {0} {1}!</p>".format(row[1], row[2]))
                     print("<p>Your email is: {0}</p><br>".format(row[3]))
                     print("<p>My events: ")
-                    cursor.execute("SELECT * FROM orders WHERE user_id={0}".format(user_id))
+                    cursor.execute("SELECT * FROM orders WHERE user_id={0}".format(row[0]))
                     records = cursor.fetchall()
-                    if records is None:
+                    if len(records) == 0:
                         print("<b>No events scheduled yet.</b></p><br>")
                     else:
                         print("</p><br>")
