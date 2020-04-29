@@ -87,7 +87,7 @@ try:
             )''')
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
-                order_id INT(6) NOT NULL AUTO_INCREMEMNT PRIMARY KEY,
+                order_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                 user_id INT(6) NOT NULL,
                 product_id INT(6) NOT NULL,
                 name VARCHAR(50) NOT NULL,
