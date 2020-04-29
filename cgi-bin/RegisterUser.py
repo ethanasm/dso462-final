@@ -85,7 +85,7 @@ try:
                 fname VARCHAR(20)  NOT NULL,
                 lname VARCHAR(20) NOT NULL,
                 email VARCHAR(30) NOT NULL,
-                pw VARCHAR(20) NOT NULL)
+                pw VARCHAR(64) NOT NULL)
         ''')
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS loggedin_user (
