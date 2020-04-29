@@ -17,9 +17,10 @@ def setLoggedIn(user_id, conn):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM loggedin_user")
     if cursor.fetchone() is None:
-        cursor.execute("INSERT INTO loggedin_user(zero,id) VALUES (0,{0})".format(user_id))
+        cursor.execute("INSERT INTO loggedin_user (zero,id) VALUES (0,{0})".format(user_id))
     else:
         cursor.execute("UPDATE loggedin_user SET id={0} WHERE zero=0".format(user_id))
+    conn.commit()
     cursor.close()
 
 profile_script_1 = '''
