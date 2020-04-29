@@ -8,6 +8,7 @@ from mysql.connector import Error
 import cgi
 import cgitb
 import hashlib
+import traceback
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
@@ -127,14 +128,15 @@ try:
                 password = input_data["password"].value
                 confpassword = input_data["confpassword"].value
                 if password == confpassword:
-                    cursor.execute("SELECT * FROM users WHERE email='{0}'".format(input_data["email"].value))
-                    user = cursor.fetchone()
-                    if user is not None:
+                    cursor.execute("SELECT * FROM users WHERE email='{0}'".format(email))
+                    if cursor.fetchone() is not None:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
                         cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
                         conn.commit()
+                        cursor.execute("SELECT * FROM users WHERE email='{0}'".format(email))
+                        user = cursor.fetchone()
                         setLoggedIn(user[0], conn)
                         print("<p>Hello {0} {1}!</p>".format(user[1], user[2]))
                         print("<p>Your email is: {0}</p><br><br>".format(user[3]))
@@ -147,7 +149,7 @@ try:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
             except Error as e:
-                print("<p>", e, "</p>")
+                print("<p>", traceback.format_exc(), "</p>")
             finally:
                 cursor.close()
         except Error as e:
@@ -157,7 +159,7 @@ try:
         print('<p>Unable to connect to MySQL database</p>')
         error = True
 except Error as e:
-    print('<p>',e,'</p>')
+    print('<p>',traceback.format_exc(),'</p>')
     error = True
 finally:
     if conn is not None and conn.is_connected():
