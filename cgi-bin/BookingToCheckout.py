@@ -7,6 +7,7 @@ import mysql.connector
 from mysql.connector import Error
 import cgi
 import cgitb
+import traceback
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
@@ -88,21 +89,24 @@ checkout_script_1 = '''
             <strong>Checkout</strong>
         </section>
         <section id="pageContent">
-            <div class="card rounded">
-                <form action="../cgi-bin/AddOrder.py" method="POST">'''
+            <div class="card rounded">'''
 
 checkout_script_2 = '''
-                    <label for="fname">First Name</label>
-                    <input type="text" id="fname" name="fname" value="{0}"><br>
-                    <label for="lname">Last Name</label>
-                    <input type="text" id="lname" name="lname" value="{1}"><br>
-                    <label for="product">Selected Bundle</label>
-                    <input type="text" id="product" value="{2}"><br>
-                    <label for="date">Event Date</label>
-                    <input type="date" id="date"  name="date"><br>
-                    <label for="time">Event Time</label>
-                    <input type="time" id="time" name="time"><br>
-                    <label for="ename">Event Name</label>
+                <p>Selected Bundle: <b>{0}</b></p><br>
+                <p>Price: <b>${1}</b></p><br>
+                <form action="../cgi-bin/AddOrder.py" method="POST">
+                    <label for="fname">First Name</label><br>
+                    <input type="text" id="fname" name="fname" value="{2}"><br><br>
+                    <label for="lname">Last Name</label><br>
+                    <input type="text" id="lname" name="lname" value="{3}"><br><br>
+                    <label for="date">Event Date</label><br>
+                    <input type="date" id="date"  name="date"><br><br>
+                    <label for="time">Event Time</label><br>
+                    <input type="time" id="time" name="time"><br><br>
+                    <label for="ename">Event Name</label><br>
+                    <input type="text" id="ename" name="ename"><br><br>
+                    <label for="desc">Event Details</label><br>
+                    <textarea rows="4" cols="60" name="desc"></textarea><br><br>
                     <input type="submit" value="Continue to Purchase Method">
                 </form>
             </div>
@@ -145,8 +149,9 @@ try:
                     print(login_script)
                 else:
                     print(checkout_script_1)
-                    row = cursor.execute("SELECT * FROM users WHERE user_id={0}".format(user_id))
-                    print(checkout_script_2.format(row[1], row[2], input_data["product"].value))
+                    cursor.execute("SELECT * FROM users WHERE user_id={0}".format(user_id))
+                    row = cursor.fetchone()
+                    print(checkout_script_2.format(input_data["product"].value, input_data["price"].value, row[1], row[2]))
             except KeyError as ke:
                 print("<p>Form values cannot be blank!</p>")
                 error = True
@@ -155,13 +160,14 @@ try:
             finally:
                 cursor.close()
         except Error as e:
-                print("<p>Error reading the form</p>")
+                track = traceback.format_exc()
+                print("<p>{0}</p>".format(track))
                 error = True
     else:
         print('<p>Unable to connect to MySQL database</p>')
         error = True
 except Error as e:
-    print('<p>',e,'</p>')
+    print('<p>',traceback.format_exc(),'</p>')
     error = True
 finally:
     if conn is not None and conn.is_connected():
