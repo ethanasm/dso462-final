@@ -23,8 +23,6 @@ def setLoggedIn(user_id, conn):
     conn.commit()
     cursor.close()
 
-product_insert_stmt = ("INSERT INTO product(name, price)""VALUES(%s, %d)")
-products = [('Full Package', 150), ('Simple Package', 100), ('Partial Package', 80), ('The Basics', 70)]
 profile_script_1 = '''
     <head>
         <meta charset="utf-8">
@@ -103,8 +101,10 @@ try:
                     name VARCHAR(30)  NOT NULL,
                     price INT(3) NOT NULL)
                 ''')
-        for product in products:
-            cursor.execute(product_insert_stmt, product)  
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Full Package", 150))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Partial Package", 100))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Simple Package", 80))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("The Basics", 70))
         conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
