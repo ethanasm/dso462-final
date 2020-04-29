@@ -13,17 +13,6 @@ input_data=cgi.FieldStorage()
 conn = None
 cursor = None
 
-def checkTableExists(conn, tablename):
-    cursor = conn.cursor()
-    cursor.execute("SELECT COUNT(*) FROM information_schema.tables WHERE table_name = '{0}'".format(tablename))
-    if cursor.fetchone()[0] == 1:
-        cursor.close()
-        return True
-    cursor.close()
-    return False
-
-product_insert_stmt = ("INSERT INTO product(name, price)""VALUES(%s, %d)")
-products = [('Full Package', 150), ('Simple Package', 100), ('Partial Package', 80), ('The Basics', 70)]
 profile_script_1 = '''
     <head>
         <meta charset="utf-8">
@@ -73,16 +62,17 @@ try:
         cursor = conn.cursor()
         cursor.execute("CREATE DATABASE IF NOT EXISTS hen")
         cursor.execute("USE hen")
-        if not checkTableExists(conn, 'products'):
-            cursor.execute('''
-                CREATE TABLE IF NOT EXISTS products (
-                    product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    name VARCHAR(30)  NOT NULL,
-                    price INT(3) NOT NULL)
-                ''')
-            for product in products:
-                cursor.execute(product_insert_stmt, product)
-            conn.commit()
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS products (
+                product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(30)  NOT NULL,
+                price INT(3) NOT NULL)
+            ''')
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Full Package", 150))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Partial Package", 100))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Simple Package", 80))
+        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("The Basics", 70))
+        conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (
                 order_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
