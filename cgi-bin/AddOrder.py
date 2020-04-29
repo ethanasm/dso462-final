@@ -68,10 +68,10 @@ try:
                 name VARCHAR(30)  NOT NULL,
                 price INT(3) NOT NULL)
             ''')
-        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Full Package", 150))
-        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Partial Package", 100))
-        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Simple Package", 80))
-        cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("The Basics", 70))
+        #cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Full Package", 150))
+        #cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Partial Package", 100))
+        #cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("Simple Package", 80))
+        #cursor.execute("INSERT INTO products (name, price) VALUES ('{0}', {1})".format("The Basics", 70))
         conn.commit()
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS orders (

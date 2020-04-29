@@ -7,11 +7,18 @@ import mysql.connector
 from mysql.connector import Error
 import cgi
 import cgitb
+import hashlib
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
 conn = None
 cursor = None
+
+def encrypt_string(hash_string):
+    sha_signature = \
+        hashlib.sha256(hash_string.encode()).hexdigest()
+    return sha_signature
+
 
 def setLoggedIn(user_id, conn):
     cursor = conn.cursor()
@@ -123,12 +130,12 @@ try:
             try:
                 email = input_data["email"].value
                 password = input_data["password"].value
-                cursor.execute("SELECT * FROM users WHERE email='" + input_data["email"].value + "'")
+                cursor.execute("SELECT * FROM users WHERE email='{0}'".format(input_data["email"].value))
                 row = cursor.fetchone()
                 if row is None:
                     print("<p>No user registered with that email</p>")
                     error = True
-                elif row[4] != password:
+                elif row[4] != encrypt_string(password):
                     print("<p>Incorrect password</p>")
                     error = True
                 else:

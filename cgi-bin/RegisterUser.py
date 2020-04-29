@@ -7,11 +7,17 @@ import mysql.connector
 from mysql.connector import Error
 import cgi
 import cgitb
+import hashlib
 
 cgitb.enable(display=0, logdir="/logs")
 input_data=cgi.FieldStorage()
 conn = None
 cursor = None
+
+def encrypt_string(hash_string):
+    sha_signature = \
+        hashlib.sha256(hash_string.encode()).hexdigest()
+    return sha_signature
 
 profile_script_1 = '''
     <head>
@@ -116,7 +122,7 @@ try:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, encrypt_string(password)))
                         conn.commit()
                         setLoggedIn(user[0], conn)
                         print("<p>Hello {0} {1}!</p>".format(user[1], user[2]))
