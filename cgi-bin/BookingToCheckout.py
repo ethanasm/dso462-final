@@ -112,13 +112,15 @@ checkout_script_2 = '''
         </footer>
     </body>'''
 
-def isLoggedIn(cursor):
+def isLoggedIn(conn):
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM loggedin_user")
     row = cursor.fetchone()
     if row is not None:
         return row[1]
     else:
         return -1
+    cursor.close()
 
 error = False
 try:
@@ -138,7 +140,7 @@ try:
         ''')
         try:
             try:
-                user_id = isLoggedIn(cursor)
+                user_id = isLoggedIn(conn)
                 if user_id == -1:
                     print(login_script)
                 else:
