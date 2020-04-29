@@ -135,7 +135,7 @@ try:
                 if row is None:
                     print("<p>No user registered with that email</p>")
                     error = True
-                elif row[4] != encrypt_string(password):
+                elif row[4] != password:
                     print("<p>Incorrect password</p>")
                     error = True
                 else:

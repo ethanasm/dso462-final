@@ -94,7 +94,7 @@ try:
                 CONSTRAINT fk_id FOREIGN KEY (id) REFERENCES users(user_id)
             )
         ''')
-        ursor.execute('''
+        cursor.execute('''
                 CREATE TABLE IF NOT EXISTS products (
                     product_id INT(6) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(30)  NOT NULL,
@@ -133,7 +133,7 @@ try:
                         print("<p>A user with that email already exists</p>")
                         error = True
                     else:
-                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, encrypt_string(password)))
+                        cursor.execute("INSERT INTO users (fname, lname, email, pw) VALUES ('{0}','{1}','{2}','{3}')".format(fname, lname, email, password))
                         conn.commit()
                         setLoggedIn(user[0], conn)
                         print("<p>Hello {0} {1}!</p>".format(user[1], user[2]))
