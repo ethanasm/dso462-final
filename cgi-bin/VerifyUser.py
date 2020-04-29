@@ -23,7 +23,7 @@ def setLoggedIn(user_id, conn):
     conn.commit()
     cursor.close()
 
-product_insert_stmt = ("INSERT INTO product(name, price)""VALUES(%s, %d)")
+product_insert_stmt = ("INSERT INTO products(name, price) VALUES(%s, %d)")
 products = [('Full Package', 150), ('Simple Package', 100), ('Partial Package', 80), ('The Basics', 70)]
 profile_script_1 = '''
     <head>
